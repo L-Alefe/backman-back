@@ -81,4 +81,37 @@ public class CategoriaController {
         }
         return ok;
     }
+
+    public Boolean inseriCategoria(CategoriaModel categoria){
+        Boolean ok = false;
+        try{
+            Conexao conectar = new Conexao();
+            PreparedStatement comando = conectar.getCon().prepareStatement("INSERT INTO categoria(descricao, status) VALUES(?,?);");
+            comando.setString(1, categoria.getDescricao());
+            comando.setInt(2, categoria.getStatus());
+            if (!comando.execute()){
+                ok = true;
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return ok;
+    }
+
+    public Boolean updateCategoria(CategoriaModel categoria){
+        Boolean ok = false;
+        try{
+            Conexao conectar = new Conexao();
+            PreparedStatement comando = conectar.getCon().prepareStatement("UPDATE categoria SET descricao=?, status=? WHERE id=?;");
+            comando.setString(1, categoria.getDescricao());
+            comando.setInt(2, categoria.getStatus());
+            comando.setInt(3, categoria.getId());
+            if (!comando.execute()){
+                ok = true;
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return ok;
+    }
 }

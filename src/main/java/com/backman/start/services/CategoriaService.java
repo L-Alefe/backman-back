@@ -36,4 +36,15 @@ public class CategoriaService {
         categoria.setId(Integer.parseInt(id));
         return categoriaCon.deletaCategoriaPorId(categoria);
     }
+
+    @PostMapping(value = "/categorias/inserir")
+    @ResponseBody
+    public boolean inseriCategoria(@RequestBody CategoriaModel categoria) {
+        return categoriaCon.inseriCategoria(categoria);
+    }
+
+    @PutMapping("/categorias/update")
+    public Boolean updateCategoria(@RequestBody CategoriaModel categoria) {
+        return categoriaCon.updateCategoria(categoria);
+    }
 }
