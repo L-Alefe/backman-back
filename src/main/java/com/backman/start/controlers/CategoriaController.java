@@ -1,14 +1,19 @@
 package com.backman.start.controlers;
 import com.backman.start.models.CategoriaModel;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+@RestController
 public class CategoriaController {
 
+    @RequestMapping(value = "/categorias", method = GET)
+    @ResponseBody
     public ArrayList selecionaCategoria(){
         ArrayList lista = new ArrayList<>();
         try{
@@ -37,7 +42,11 @@ public class CategoriaController {
         return lista;
     }
 
-    public ArrayList selecionaCategoriaPorId(CategoriaModel categoria){
+    @RequestMapping(value = "/categorias/{id}", method = GET)
+    @ResponseBody
+    public ArrayList selecionaCategoriaPorId(@PathVariable String id){
+        CategoriaModel categoria = new CategoriaModel();
+        categoria.setId(Integer.parseInt(id));
         ArrayList lista = new ArrayList<>();
         try{
             Conexao conectar = new Conexao();
@@ -50,10 +59,10 @@ public class CategoriaController {
                 while(rs.next()){
                     CategoriaModel categoriaAtual = new CategoriaModel();
 
-                    Integer id = Integer.parseInt(rs.getString("id"));
+                    Integer idAtual = Integer.parseInt(rs.getString("id"));
                     String descricao = rs.getString("descricao");
                     Integer status = Integer.parseInt(rs.getString("status"));
-                    categoriaAtual.setId(id);
+                    categoriaAtual.setId(idAtual);
                     categoriaAtual.setDescricao(descricao);
                     categoriaAtual.setStatus(status);
                     lista.add(categoriaAtual);
@@ -67,8 +76,12 @@ public class CategoriaController {
         return lista;
     }
 
-    public Boolean deletaCategoriaPorId(CategoriaModel categoria){
+    @RequestMapping(value = "/categorias/excluir/{id}", method= RequestMethod.DELETE)
+    @ResponseBody
+    public Boolean deletaCategoriaPorId(@PathVariable String id){
         Boolean ok = false;
+        CategoriaModel categoria = new CategoriaModel();
+        categoria.setId(Integer.parseInt(id));
         try{
             Conexao conectar = new Conexao();
             PreparedStatement comando = conectar.getCon().prepareStatement("DELETE FROM categoria WHERE id = ?;");
@@ -82,7 +95,9 @@ public class CategoriaController {
         return ok;
     }
 
-    public Boolean inseriCategoria(CategoriaModel categoria){
+    @PostMapping(value = "/categorias/inserir")
+    @ResponseBody
+    public Boolean inseriCategoria(@RequestBody CategoriaModel categoria){
         Boolean ok = false;
         try{
             Conexao conectar = new Conexao();
@@ -98,7 +113,8 @@ public class CategoriaController {
         return ok;
     }
 
-    public Boolean updateCategoria(CategoriaModel categoria){
+    @PutMapping("/categorias/update")
+    public Boolean updateCategoria(@RequestBody CategoriaModel categoria){
         Boolean ok = false;
         try{
             Conexao conectar = new Conexao();
@@ -115,15 +131,15 @@ public class CategoriaController {
         return ok;
     }
 
-    public ArrayList getCategoriaPorNome(CategoriaModel categoria){
+    @RequestMapping(value = "/categorias/nome/{descricao}", method = GET)
+    @ResponseBody
+    public ArrayList getCategoriaPorNome(@PathVariable CategoriaModel categoria){
         ArrayList lista = new ArrayList<>();
         try{
             Conexao conectar = new Conexao();
             PreparedStatement comando = conectar.getCon().prepareStatement("SELECT * FROM categoria WHERE descricao = ?;");
             comando.setString(1, categoria.getDescricao());
             ResultSet rs = comando.executeQuery();
-
-
             if(rs != null){
                 while(rs.next()){
                     CategoriaModel categoriaAtual = new CategoriaModel();
