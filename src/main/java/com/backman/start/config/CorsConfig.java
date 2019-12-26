@@ -19,5 +19,5 @@ public class CorsConfig {
                         .allowedOrigins("http://localhost:4200");
             }
         };
-    }
+    }   
 }

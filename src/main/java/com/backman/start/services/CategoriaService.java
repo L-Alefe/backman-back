@@ -47,4 +47,12 @@ public class CategoriaService {
     public Boolean updateCategoria(@RequestBody CategoriaModel categoria) {
         return categoriaCon.updateCategoria(categoria);
     }
+
+    @RequestMapping(value = "/categorias/nome/{descricao}", method = GET)
+    @ResponseBody
+    public ArrayList getCategoriaPorNome(@PathVariable String descricao) {
+        CategoriaModel categoria = new CategoriaModel();
+        categoria.setDescricao(descricao);
+        return categoriaCon.getCategoriaPorNome(categoria);
+    }
 }

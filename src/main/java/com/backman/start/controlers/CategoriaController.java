@@ -114,4 +114,34 @@ public class CategoriaController {
         }
         return ok;
     }
+
+    public ArrayList getCategoriaPorNome(CategoriaModel categoria){
+        ArrayList lista = new ArrayList<>();
+        try{
+            Conexao conectar = new Conexao();
+            PreparedStatement comando = conectar.getCon().prepareStatement("SELECT * FROM categoria WHERE descricao = ?;");
+            comando.setString(1, categoria.getDescricao());
+            ResultSet rs = comando.executeQuery();
+
+
+            if(rs != null){
+                while(rs.next()){
+                    CategoriaModel categoriaAtual = new CategoriaModel();
+
+                    Integer id = Integer.parseInt(rs.getString("id"));
+                    String descricao = rs.getString("descricao");
+                    Integer status = Integer.parseInt(rs.getString("status"));
+                    categoriaAtual.setId(id);
+                    categoriaAtual.setDescricao(descricao);
+                    categoriaAtual.setStatus(status);
+                    lista.add(categoriaAtual);
+                }
+            }else{
+                lista = null;
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return lista;
+    }
 }
